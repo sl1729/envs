@@ -1,19 +1,25 @@
 ---
 
+- name: "ControlCenter"
+  box: "bento/ubuntu-16.04"
+  ram: "1024"
+  ip: "10.0.2.5"
+  #ansible: "provisioning/ControlCenter.yml" 
+  
 - name: "node1"
-  box: "centos/7"
+  box: "bento/ubuntu-16.04"
   ram: "1024"
   ip: "10.0.1.10"
-  #ansible: "provisioning/devsecops-box.yml" 
+  #ansible: "provisioning/elasticsearch.yml" 
 
 - name: "node2"
-  box: "centos/7"
+  box: "bento/ubuntu-16.04"
   ram: "1024"
   ip: "10.0.1.11"
-  #ansible: "provisioning/devsecops-box.yml" 
+  #ansible: "provisioning/kibana.yml" 
 
 - name: "node3"
-  box: "centos/7"
+  box: "bento/ubuntu-16.04"
   ram: "1024"
   ip: "10.0.1.12"
-  #ansible: "provisioning/devsecops-box.yml" 
+  #ansible: "provisioning/logstash.yml" 

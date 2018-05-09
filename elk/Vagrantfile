@@ -46,4 +46,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       end # end of vb provider
     end # end of box
   end # end of machines loop
+    
+  config.vm.provision "shell", inline: <<-SHELL
+    apt-get install -y avahi-daemon libnss-mdns
+  SHELL
+
+  config.vm.synced_folder "./data", "/vagrant"
+
 end # end of config
