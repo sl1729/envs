@@ -1,0 +1,19 @@
+---
+
+- name: "node1"
+  box: "centos/7"
+  ram: "1024"
+  ip: "10.0.1.10"
+  #ansible: "provisioning/devsecops-box.yml" 
+
+- name: "node2"
+  box: "centos/7"
+  ram: "1024"
+  ip: "10.0.1.11"
+  #ansible: "provisioning/devsecops-box.yml" 
+
+- name: "node3"
+  box: "centos/7"
+  ram: "1024"
+  ip: "10.0.1.12"
+  #ansible: "provisioning/devsecops-box.yml" 
