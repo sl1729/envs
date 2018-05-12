@@ -1,0 +1,8 @@
+---
+
+- name: "PostgreSQL"
+  box: "bento/ubuntu-16.04"
+  ram: "1024"
+  ip: "10.0.3.10"
+  ansible: "provisioning/postgres.yml" 
+  

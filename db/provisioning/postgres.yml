@@ -1,0 +1,87 @@
+---
+
+- name: Install postgresql 10
+  hosts: all
+  gather_facts: yes
+  become: yes
+  become_user: root
+  remote_user: vagrant
+  tasks:
+    - name: Check repo directory status
+      file: 
+        path: /etc/apt/sources.list.d
+        state: directory
+
+    - name: Create a repo file
+      file: 
+        path: /etc/apt/sources.list.d/pgdg.list 
+        state: touch
+    
+    - name: Add specified repository into sources list using specified filename. 
+      apt_repository:
+        repo: deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main
+        state: present
+        filename: pgdg.list
+    
+    - name: Add an Apt signing key, uses whichever key is at the URL
+      apt_key:
+        url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+        state: present
+    
+    - name: Update all packages to the latest version
+      apt:
+        upgrade: dist
+
+    - name: Install postgresql-10
+      apt:
+        name: postgresql-10
+        state: present
+        force: yes
+
+    - name: Update postgres.conf
+      lineinfile:
+        path: /etc/postgresql/10/main/postgresql.conf
+        line: "listen_addresses = '*'"
+        insertbefore: "#listen_addresses = 'localhost'"
+    
+    - name: Update pg_hba.conf
+      lineinfile:
+        path: /etc/postgresql/10/main/pg_hba.conf
+        line: "host    all             all             10.0.3.10/24            md5"
+        insertafter: "# IPv4 local connections:"
+
+    - name: Update pg_hba.conf
+      replace:
+        path: /etc/postgresql/10/main/pg_hba.conf
+        regexp: "local   all             postgres                                peer"
+        replace: "local   all             postgres                                trust"
+
+    - name: Restart the postgresql service
+      service:
+        name: postgresql
+        state: restarted
+        
+    - name: install prerequisites
+      sudo: true
+      apt: name={{ item }} state=latest force=yes
+      with_items:
+        - libpq-dev
+        - python-psycopg2
+    
+    - name: Create database mytestdb
+      postgresql_db:
+        name: mytestdb
+    
+    - name: Create user for db mytestdb
+      postgresql_user:
+        db: mytestdb
+        name: mytestuser
+        password: ceec4eif7ya
+        encrypted: yes
+        priv: ALL
+    
+    - name: Install pgadmin4
+      apt:
+        name: pgadmin4
+        state: present
+        force: yes
