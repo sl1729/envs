@@ -6,6 +6,11 @@
   become: yes
   become_user: root
   remote_user: vagrant
+  vars:
+    - host_ip: "10.0.3.10"
+    - db_name: "mytestdb"
+    - db_username: "mytestuser"
+    - db_password: "ceec4eif7ya"
   tasks:
     - name: Check repo directory status
       file: 
@@ -17,7 +22,7 @@
         path: /etc/apt/sources.list.d/pgdg.list 
         state: touch
     
-    - name: Add specified repository into sources list using specified filename. 
+    - name: Add specified repository into sources list using specified filename
       apt_repository:
         repo: deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main
         state: present
@@ -47,7 +52,7 @@
     - name: Update pg_hba.conf
       lineinfile:
         path: /etc/postgresql/10/main/pg_hba.conf
-        line: "host    all             all             10.0.3.10/24            md5"
+        line: "host    all             all             {{host_ip}}/24            md5"
         insertafter: "# IPv4 local connections:"
 
     - name: Update pg_hba.conf
@@ -68,15 +73,15 @@
         - libpq-dev
         - python-psycopg2
     
-    - name: Create database mytestdb
+    - name: "Create database {{db_name}}"
       postgresql_db:
-        name: mytestdb
+        name: "{{db_name}}"
     
-    - name: Create user for db mytestdb
+    - name: "Create user for db {{db_name}}"
       postgresql_user:
-        db: mytestdb
-        name: mytestuser
-        password: ceec4eif7ya
+        db: "{{db_name}}"
+        name: "{{db_username}}"
+        password: "{{db_password}}"
         encrypted: yes
         priv: ALL
     
