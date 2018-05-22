@@ -2,6 +2,7 @@
 *.retry
 *.log
 .vagrant
+.terraform
 env
 *.pyc
 __pycache__

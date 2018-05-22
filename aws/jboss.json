@@ -29,7 +29,7 @@
     [
         {
             "type": "ansible",
-            "playbook_file": "./jboss.yml"
+            "playbook_file": "./provisioning/jboss.yml"
         }
     ]
 }

@@ -28,7 +28,7 @@
         name: https://s3-ap-southeast-1.amazonaws.com/sl1729/installable/jdk-8u171-linux-x64.rpm
         state: present        
 
-    - name: Download jboss eap 7.1
+    - name: Download jboss eap 6.4
       get_url: 
         url: https://s3-ap-southeast-1.amazonaws.com/sl1729/installable/jboss-eap-6.4.zip
         dest: /devops/jboss-eap-6.4.zip
@@ -62,4 +62,30 @@
       become: yes
       become_user: jboss
       becomd_method: su
-    
+
+    - name: Update jboss conf for run as user
+      replace:
+        path: /opt/jboss/bin/init.d/jboss-as.conf
+        regexp: '^# JBOSS_USER=jboss-as'
+        replace: 'JBOSS_USER=jboss'
+
+    - name: Update standalong conf for the memory settings
+      replace:
+        path: /opt/jboss/bin/standalone.conf
+        regexp: 'JAVA_OPTS="-Xms1303m -Xmx1303m -XX:MaxPermSize=256m -Djava.net.preferIPv4Stack=true"'
+        replace: 'JAVA_OPTS="-Xms512m -Xmx512m -XX:MaxPermSize=256m -Djava.net.preferIPv4Stack=true"'
+
+    - name: Copy jboss-as-standalone.sh to /etc/init.d
+      copy:
+        src: ./jboss-as-standalone.service
+        dest: /etc/systemd/system
+        mode: 0755
+
+    - name: Update jboss.bind.address to listen to all 
+      replace:
+        path: /opt/jboss/standalone/configuration/standalone.xml
+        regexp: '127.0.0.1'
+        replace: '0.0.0.0'
+
+    - name: Enable jboss-as-standalone.service
+      systemd: enabled=yes name=jboss-as-standalone.service state=reloaded
