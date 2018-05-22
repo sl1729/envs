@@ -1,0 +1,65 @@
+---
+#reference for installation : https://gist.github.com/Burning-Chai/4ba5fc640397169780c1cb3357f2190c
+- name: Install jboss app server and its dependencies
+  hosts: all
+  gather_facts: no
+  remote_user: centos
+  become: yes
+  become_user: root
+  become_method: sudo
+  vars:
+    - welcome_msg: "Welcome to AWS"
+    
+  tasks:
+    - name: Create base devops directory
+      file: path=/devops state=directory mode=777
+
+    - name: Install git, wget, tree, openssl, unzip
+      yum: name="{{item}}" state=present
+      with_items:
+        - git.x86_64
+        - wget.x86_64
+        - tree.x86_64
+        - openssl.x86_64
+        - unzip.x86_64
+        
+    - name: Install jdk 8
+      yum:
+        name: https://s3-ap-southeast-1.amazonaws.com/sl1729/installable/jdk-8u171-linux-x64.rpm
+        state: present        
+
+    - name: Download jboss eap 7.1
+      get_url: 
+        url: https://s3-ap-southeast-1.amazonaws.com/sl1729/installable/jboss-eap-6.4.zip
+        dest: /devops/jboss-eap-6.4.zip
+        force: no
+        
+    - name: Unarchive jboss eap 6.4
+      unarchive: 
+        src: /devops/jboss-eap-6.4.zip 
+        dest: /opt/ 
+        creates: /opt/jboss-eap-6.4/ 
+        remote_src: yes
+      
+    - name: Create symlink jboss
+      file: src=/opt/jboss-eap-6.4/ dest=/opt/jboss state=link
+      
+    - name: Create user jboss
+      user: name=jboss uid=1040
+
+    - name: Jboss change owner for the jboss base folder
+      file: path="{{item}}" owner=jboss group=jboss recurse=yes
+      with_items:
+        - /opt/jboss-eap-6.4/
+
+    - name: Jboss change owner for the jboss symlink
+      file: src=/opt/jboss-eap-6.4/ dest=/opt/jboss owner=jboss group=jboss follow=no state=link
+
+    - name: Jboss add users
+      shell: ./add-user.sh admin DummyAdmin@123
+      args:
+        chdir: /opt/jboss/bin
+      become: yes
+      become_user: jboss
+      becomd_method: su
+    

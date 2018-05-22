@@ -1,0 +1,35 @@
+{
+    "variables": {
+        "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+        "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
+        "aws_region": "{{env `AWS_REGION`}}",
+        "aws_ami_image": "ami-76144b0a",
+        "image_version": "6.4.0"
+    },
+    "builders": 
+    [
+        {
+            "type": "amazon-ebs",
+            "access_key": "{{user `aws_access_key`}}",
+            "secret_key": "{{user `aws_secret_key`}}",
+            "region": "{{user `aws_region`}}",
+            "source_ami": "{{user `aws_ami_image`}}",
+            "instance_type": "t2.micro",
+            "ssh_username": "ec2-user",
+            "ami_name": "jboss-{{timestamp}}",
+            "tags": 
+            {
+                "Name": "jboss-eap-{{user `image_version`}}",
+                "OS_Version": "RHEL 7.5",
+                "Description": "Jboss EAP server"
+            }
+        }
+    ],
+    "provisioners": 
+    [
+        {
+            "type": "ansible",
+            "playbook_file": "./jboss.yml"
+        }
+    ]
+}
