@@ -17,7 +17,7 @@
             "instance_type": "t2.micro",
             "ssh_username": "ec2-user",
             "ami_name": "jboss-{{timestamp}}",
-            "tags": 
+            "tags":
             {
                 "Name": "jboss-eap-{{user `image_version`}}",
                 "OS_Version": "RHEL 7.5",
@@ -25,7 +25,7 @@
             }
         }
     ],
-    "provisioners": 
+    "provisioners":
     [
         {
             "type": "ansible",

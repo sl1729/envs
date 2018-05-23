@@ -9,7 +9,7 @@
   become_method: sudo
   vars:
     - welcome_msg: "Welcome to AWS"
-    
+
   tasks:
     - name: Create base devops directory
       file: path=/devops state=directory mode=777
@@ -22,28 +22,28 @@
         - tree.x86_64
         - openssl.x86_64
         - unzip.x86_64
-        
+
     - name: Install jdk 8
       yum:
         name: https://s3-ap-southeast-1.amazonaws.com/sl1729/installable/jdk-8u171-linux-x64.rpm
-        state: present        
+        state: present
 
     - name: Download jboss eap 6.4
-      get_url: 
+      get_url:
         url: https://s3-ap-southeast-1.amazonaws.com/sl1729/installable/jboss-eap-6.4.zip
         dest: /devops/jboss-eap-6.4.zip
         force: no
-        
+
     - name: Unarchive jboss eap 6.4
-      unarchive: 
-        src: /devops/jboss-eap-6.4.zip 
-        dest: /opt/ 
-        creates: /opt/jboss-eap-6.4/ 
+      unarchive:
+        src: /devops/jboss-eap-6.4.zip
+        dest: /opt/
+        creates: /opt/jboss-eap-6.4/
         remote_src: yes
-      
+
     - name: Create symlink jboss
       file: src=/opt/jboss-eap-6.4/ dest=/opt/jboss state=link
-      
+
     - name: Create user jboss
       user: name=jboss uid=1040
 
@@ -81,7 +81,7 @@
         dest: /etc/systemd/system
         mode: 0755
 
-    - name: Update jboss.bind.address to listen to all 
+    - name: Update jboss.bind.address to listen to all
       replace:
         path: /opt/jboss/standalone/configuration/standalone.xml
         regexp: '127.0.0.1'

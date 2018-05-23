@@ -15,7 +15,7 @@ resource "aws_lb" "jboss-lb" {
     name                = "jboss-lb"
     internal            = false
     load_balancer_type  = "application"
-    subnets             = ["subnet-18f5cb5e","subnet-ad9596c9","subnet-480a3e3e"]        
+    subnets             = ["subnet-18f5cb5e","subnet-ad9596c9","subnet-480a3e3e"]
     enable_deletion_protection = false
 }
 
@@ -58,4 +58,3 @@ resource "aws_security_group" "allow_jboss" {
         Name = "allow_jboss"
     }
 }
-
