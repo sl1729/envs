@@ -6,7 +6,7 @@
         "aws_ami_image": "ami-76144b0a",
         "image_version": "6.4.0"
     },
-    "builders": 
+    "builders":
     [
         {
             "type": "amazon-ebs",

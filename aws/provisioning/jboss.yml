@@ -22,11 +22,7 @@
         - tree.x86_64
         - openssl.x86_64
         - unzip.x86_64
-
-    - name: Install jdk 8
-      yum:
-        name: https://s3-ap-southeast-1.amazonaws.com/sl1729/installable/jdk-8u171-linux-x64.rpm
-        state: present
+        - java-1.8.0-openjdk.x86_64
 
     - name: Download jboss eap 6.4
       get_url:
@@ -77,7 +73,7 @@
 
     - name: Copy jboss-as-standalone.sh to /etc/init.d
       copy:
-        src: ./jboss-as-standalone.service
+        src: ./files/jboss-as-standalone.service
         dest: /etc/systemd/system
         mode: 0755
 

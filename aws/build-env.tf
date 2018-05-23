@@ -7,6 +7,7 @@ terraform {
   }
 }
 
+# Configure the region in which it works
 provider "aws" {
     region              = "ap-southeast-1"
 }
@@ -19,13 +20,15 @@ resource "aws_lb" "jboss-lb" {
     enable_deletion_protection = false
 }
 
-resource "aws_instance" "jboss-node" {
-    ami               = "ami-cdf8cab1"
-    instance_type     = "t2.large"
-    key_name          = "ItsFun2WorkNow"
-    security_groups   = [ "allow_jboss" ]
-    user_data         = "<bash>sudo systemctl restart jboss-as-standalone.service</bash>"
-    count             = 3
+data "aws_ami" "jboss_ami" {
+  most_recent      = true
+
+  filter {
+    name   = "name"
+    values = ["jboss-*"]
+  }
+
+  owners     = ["702039097694"]
 }
 
 resource "aws_security_group" "allow_jboss" {
@@ -57,4 +60,13 @@ resource "aws_security_group" "allow_jboss" {
     tags {
         Name = "allow_jboss"
     }
+}
+
+resource "aws_instance" "jboss-node" {
+    ami               = "${data.aws_ami.jboss_ami.id}"
+    instance_type     = "t2.large"
+    key_name          = "ItsFun2WorkNow"
+    security_groups   = [ "allow_jboss" ]
+    user_data         = "<bash>sudo systemctl restart jboss-as-standalone.service</bash>"
+    count             = 3
 }

@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=idle
-Environment=JBOSS_HOME=/opt/jboss JBOSS_LOG_DIR=/var/log/jboss "JAVA_OPTS=-Xms1024m -Xmx20480m -XX:MaxPermSize=768m -Djboss.bind.address=0.0.0.0"
+Environment=JBOSS_HOME=/opt/jboss JBOSS_LOG_DIR=/var/log/jboss "JAVA_OPTS=-Xms1024m -Xmx20480m -XX:MaxPermSize=768m
 User=jboss
 Group=jboss
 ExecStart=/opt/jboss/bin/standalone.sh
