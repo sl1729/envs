@@ -16,7 +16,7 @@
             "source_ami": "{{user `aws_ami_image`}}",
             "instance_type": "t2.micro",
             "ssh_username": "ec2-user",
-            "ami_name": "jboss-{{timestamp}}",
+            "ami_name": "jboss-eap-6.4.0-{{timestamp}}",
             "tags":
             {
                 "Name": "jboss-eap-{{user `image_version`}}",
