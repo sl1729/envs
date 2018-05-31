@@ -128,26 +128,42 @@ resource "aws_lb_cookie_stickiness_policy" "jboss-cookie-policy" {
   cookie_expiration_period = 600
 }
 
+data "aws_ami" "jboss-ami" {
+  most_recent = "true"
+
+  filter {
+    name   = "name"
+    values = ["jboss-eap-6.4.0*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["${var.owner_id}"]
+}
+
 resource "aws_instance" "jboss-instance-zone-a" {
-  ami                         = "${var.jboss-ami}"
-  instance_type               = "t2.micro"
+  ami                         = "${data.aws_ami.jboss-ami.id}"
+  instance_type               = "${var.instance-type}"
   subnet_id                   = "${aws_subnet.zone-a.id}"
   associate_public_ip_address = "true"
-  key_name                    = "ItsFun2WorkNow"
+  key_name                    = "${var.access-key}"
 }
 
 resource "aws_instance" "jboss-instance-zone-b" {
-  ami                         = "${var.jboss-ami}"
-  instance_type               = "t2.micro"
+  ami                         = "${data.aws_ami.jboss-ami.id}"
+  instance_type               = "${var.instance-type}"
   subnet_id                   = "${aws_subnet.zone-b.id}"
   associate_public_ip_address = "true"
-  key_name                    = "ItsFun2WorkNow"
+  key_name                    = "${var.access-key}"
 }
 
 resource "aws_instance" "jboss-instance-zone-c" {
-  ami                         = "${var.jboss-ami}"
-  instance_type               = "t2.micro"
+  ami                         = "${data.aws_ami.jboss-ami.id}"
+  instance_type               = "${var.instance-type}"
   subnet_id                   = "${aws_subnet.zone-c.id}"
   associate_public_ip_address = "true"
-  key_name                    = "ItsFun2WorkNow"
+  key_name                    = "${var.access-key}"
 }

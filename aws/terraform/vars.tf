@@ -24,7 +24,12 @@ variable "owner_id" {
   default = "702039097694"
 }
 
-variable "jboss-ami" {
+variable "instance-type" {
   type    = "string"
-  default = "ami-b0734ecc"
+  default = "t2.micro"
+}
+
+variable "access-key" {
+  type    = "string"
+  default = "ItsFun2WorkNow"
 }
