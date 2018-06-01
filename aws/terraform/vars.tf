@@ -1,9 +1,9 @@
 # Configure the Terraform backend to be stored into the S3 and not local
 terraform {
   backend "s3" {
-    bucket = "sl1729"            #bucket created as a pre-requisite
+    bucket = "sl1729"         #bucket created as a pre-requisite
     region = "ap-southeast-1"
-    key    = "terraform.tfstate" #file name to be used for the store
+    key    = "state.tfstate"  #file name to be used for the store
   }
 }
 

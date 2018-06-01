@@ -2,7 +2,7 @@ resource "aws_vpc" "rgb" {
   cidr_block = "172.36.0.0/16"
 
   tags {
-    Name = "My VPC"
+    Name = "vpc-${terraform.workspace}"
   }
 }
 
@@ -10,7 +10,7 @@ resource "aws_internet_gateway" "rgb-ig" {
   vpc_id = "${aws_vpc.rgb.id}"
 
   tags {
-    Name = "Default internet gateway"
+    Name = "Default internet gateway - ${terraform.workspace}"
   }
 }
 
@@ -20,7 +20,7 @@ resource "aws_subnet" "zone-a" {
   availability_zone = "ap-southeast-1a"
 
   tags {
-    Name = "Zone A"
+    Name = "Zone A ${terraform.workspace}"
   }
 }
 
@@ -30,7 +30,7 @@ resource "aws_subnet" "zone-b" {
   availability_zone = "ap-southeast-1b"
 
   tags {
-    Name = "Zone B"
+    Name = "Zone B ${terraform.workspace}"
   }
 }
 
@@ -40,7 +40,7 @@ resource "aws_subnet" "zone-c" {
   availability_zone = "ap-southeast-1c"
 
   tags {
-    Name = "Zone C"
+    Name = "Zone C ${terraform.workspace}"
   }
 }
 
@@ -48,7 +48,7 @@ resource "aws_default_route_table" "default" {
   default_route_table_id = "${aws_vpc.rgb.default_route_table_id}"
 
   tags {
-    Name = "Default routing table"
+    Name = "Default routing table ${terraform.workspace}"
   }
 }
 
@@ -96,7 +96,7 @@ resource "aws_default_security_group" "default" {
 }
 
 resource "aws_elb" "jboss-elb" {
-  name                        = "jboss-elb"
+  name                        = "jboss-elb-${terraform.workspace}"
   subnets                     = ["${aws_subnet.zone-a.id}", "${aws_subnet.zone-b.id}", "${aws_subnet.zone-c.id}"]
   instances                   = ["${aws_instance.jboss-instance-zone-a.id}", "${aws_instance.jboss-instance-zone-b.id}", "${aws_instance.jboss-instance-zone-c.id}"]
   cross_zone_load_balancing   = "true"
@@ -122,7 +122,7 @@ resource "aws_elb" "jboss-elb" {
 }
 
 resource "aws_lb_cookie_stickiness_policy" "jboss-cookie-policy" {
-  name                     = "jboss-cookie-policy"
+  name                     = "jboss-cookie-policy-${terraform.workspace}"
   load_balancer            = "${aws_elb.jboss-elb.id}"
   lb_port                  = 80
   cookie_expiration_period = 600
@@ -150,6 +150,10 @@ resource "aws_instance" "jboss-instance-zone-a" {
   subnet_id                   = "${aws_subnet.zone-a.id}"
   associate_public_ip_address = "true"
   key_name                    = "${var.access-key}"
+
+  tags {
+    Name = "jboss-instance-zone-a-${terraform.workspace}"
+  }
 }
 
 resource "aws_instance" "jboss-instance-zone-b" {
@@ -158,6 +162,10 @@ resource "aws_instance" "jboss-instance-zone-b" {
   subnet_id                   = "${aws_subnet.zone-b.id}"
   associate_public_ip_address = "true"
   key_name                    = "${var.access-key}"
+
+  tags {
+    Name = "jboss-instance-zone-b-${terraform.workspace}"
+  }
 }
 
 resource "aws_instance" "jboss-instance-zone-c" {
@@ -166,4 +174,8 @@ resource "aws_instance" "jboss-instance-zone-c" {
   subnet_id                   = "${aws_subnet.zone-c.id}"
   associate_public_ip_address = "true"
   key_name                    = "${var.access-key}"
+
+  tags {
+    Name = "jboss-instance-zone-c-${terraform.workspace}"
+  }
 }
